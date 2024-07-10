@@ -4,6 +4,7 @@ import position
 class Solver:
     def __init__(self):
         self.node_count = 0
+        self.best_move = None
 
     def negamax(self, p, alpha, beta):
         self.node_count += 1  # Increment counter of explored nodes
@@ -37,14 +38,17 @@ class Solver:
                     return score
                 if score > alpha:
                     alpha = score
+                    self.best_move = x
         return alpha
 
-    def solve(self, p, weak = False):
+    def solve(self, p, weak=False):
         self.node_count = 0
+        self.best_move = None
         if weak:
             return self.negamax(p, -1, 1)
         else:
-            return self.negamax(p, -position.Position.WIDTH * position.Position.HEIGHT / 2, position.Position.WIDTH * position.Position.HEIGHT / 2)
+            return self.negamax(p, -position.Position.WIDTH * position.Position.HEIGHT / 2,
+                                position.Position.WIDTH * position.Position.HEIGHT / 2)
 
     def get_node_count(self):
         return self.node_count
