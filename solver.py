@@ -1,4 +1,5 @@
 import position
+import best_move
 
 
 class Solver:
@@ -38,7 +39,7 @@ class Solver:
                     return score
                 if score > alpha:
                     alpha = score
-                    self.best_move = x
+                    best_move.best_score(x, alpha)
         return alpha
 
     def solve(self, p, weak=False):

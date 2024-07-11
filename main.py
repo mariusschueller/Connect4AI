@@ -1,6 +1,7 @@
 import time
 import position
 import solver
+import best_move
 
 
 def get_time_microsec():
@@ -19,7 +20,7 @@ def main():
     end_time = get_time_microsec()
 
     print(sequence + "  Score: " + str(score) + "  Node Count: " + str(s.get_node_count()) + "  Time:" + str(
-        end_time - start_time) + "  Best Move: " + str(s.best_move))
+        end_time - start_time) + "  Best Move: " + str(best_move.best))
 
 
 if __name__ == "__main__":
