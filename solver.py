@@ -1,8 +1,13 @@
 import position
 import best_move
 
+columnOrder = [0] * position.Position.WIDTH
+for i in range(position.Position.WIDTH):
+    columnOrder[i] = position.Position.WIDTH // 2 + (1 - 2 * (i % 2)) * (i + 1) // 2
+
 
 class Solver:
+
     def __init__(self):
         self.node_count = 0
         self.best_move = None
@@ -25,13 +30,13 @@ class Solver:
                 return beta
 
         for x in range(p.WIDTH):
-            if p.can_play(x):
+            if p.can_play(columnOrder[x]):
                 p2 = position.Position()
                 p2.board = [row[:] for row in p.board]
                 p2.height = p.height[:]
                 p2.moves = p.moves
 
-                p2.play(x)
+                p2.play(columnOrder[x])
 
                 score = -self.negamax(p2, -beta, -alpha)
 
@@ -39,7 +44,7 @@ class Solver:
                     return score
                 if score > alpha:
                     alpha = score
-                    best_move.best_score(x, alpha)
+                    best_move.best_score(columnOrder[x], alpha)
         return alpha
 
     def solve(self, p, weak=False):
