@@ -32,8 +32,8 @@ class Solver:
         for x in range(p.WIDTH):
             if p.can_play(columnOrder[x]):
                 p2 = position.Position()
-                p2.board = [row[:] for row in p.board]
-                p2.height = p.height[:]
+                p2.current_position = p.current_position
+                p2.mask = p.mask
                 p2.moves = p.moves
 
                 p2.play(columnOrder[x])

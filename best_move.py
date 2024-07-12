@@ -1,5 +1,5 @@
 best = -1
-best_alpha = -1
+best_alpha = -50
 
 
 def best_score(move, alpha):

@@ -3,16 +3,16 @@ class Position:
     HEIGHT = 6
 
     def __init__(self):
-        self.board = [[0 for _ in range(self.HEIGHT)] for _ in range(self.WIDTH)]  # height and width change
-        self.height = [0] * self.WIDTH
+        self.current_position = 0
+        self.mask = 0
         self.moves = 0
 
     def can_play(self, col: int):
-        return self.height[col] < self.HEIGHT
+        return self.mask & self.top_mask(col) == 0
 
     def play(self, col: int):
-        self.board[col][self.height[col]] = 1 + self.moves % 2
-        self.height[col] += 1
+        self.current_position ^= self.mask
+        self.mask |= self.mask + self.bottom_mask(col)
         self.moves += 1
 
     def play_sequence(self, seq: str):
@@ -24,24 +24,41 @@ class Position:
         return len(seq)
 
     def is_winning_move(self, col: int):
-        current_player = 1 + self.moves % 2
-        if self.height[col] >= 3 and \
-                self.board[col][self.height[col] - 1] == current_player and \
-                self.board[col][self.height[col] - 2] == current_player and \
-                self.board[col][self.height[col] - 3] == current_player:
-            return True
-
-        for dy in [-1, 0, 1]:
-            nb = 0
-            for dx in [-1, 1]:
-                x, y = col + dx, self.height[col] + dx * dy
-                while 0 <= x < Position.WIDTH and 0 <= y < Position.HEIGHT and self.board[x][y] == current_player:
-                    nb += 1
-                    x += dx
-                    y += dx * dy
-            if nb >= 3:
-                return True
-        return False
+        pos = self.current_position
+        pos |= (self.mask + self.bottom_mask(col)) & self.column_mask(col)
+        return self.alignment(pos)
 
     def nb_moves(self):
         return self.moves
+
+    def key(self):
+        return self.current_position + self.mask
+
+    def alignment(self, pos):
+        # horizontal
+        m = pos & (pos >> (self.HEIGHT + 1))
+        if m & (m >> (2 * (self.HEIGHT + 1))):
+            return True
+
+        m = pos & (pos >> self.HEIGHT)
+        if m & (m >> (2 * self.HEIGHT)):
+            return True
+
+        m = pos & (pos >> (self.HEIGHT + 2))
+        if m & (m >> (2 * (self.HEIGHT + 2))):
+            return True
+
+        m = pos & (pos >> 1)
+        if m & (m >> 2):
+            return True
+
+        return False
+
+    def top_mask(self, col: int):
+        return (1 << (self.HEIGHT - 1)) << col * (self.HEIGHT + 1)
+
+    def bottom_mask(self, col: int):
+        return 1 << col * (self.HEIGHT + 1)
+
+    def column_mask(self, col: int):
+        return ((1 << self.HEIGHT) - 1) << col * (self.HEIGHT + 1)
