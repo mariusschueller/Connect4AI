@@ -1,11 +1,14 @@
 class Position:
     WIDTH = 7
     HEIGHT = 6
+    MIN_SCORE = -(WIDTH * HEIGHT) // 2 + 3
+    MAX_SCORE = (WIDTH * HEIGHT + 1) // 2 - 3
 
-    def __init__(self):
+    def __init__(self, cur_player):
         self.current_position = 0
         self.mask = 0
         self.moves = 0
+        self.cur_player = cur_player
 
     def can_play(self, col: int):
         return self.mask & self.top_mask(col) == 0

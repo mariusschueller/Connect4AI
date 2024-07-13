@@ -10,7 +10,7 @@ def get_time_microsec():
 
 def main():
     s = solver.Solver()
-    p = position.Position()
+    p = position.Position(True)
 
     sequence = input("Get sequence")
     p.play_sequence(sequence)
@@ -21,7 +21,7 @@ def main():
 
     print(sequence + "  Score: " + str(score) + "  Node Count: " + str(s.get_node_count()) + "  Time:" + str(
         end_time - start_time) + "  Best Move: " + str(best_move.best))
-    # FIXME Best move is still in progress
+
 
 if __name__ == "__main__":
     main()
